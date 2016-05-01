@@ -1,0 +1,28 @@
+{
+  "name": "jof",
+  "description": "just one file - build client server prototype in a single file",
+  "keywords": [
+    "prototype",
+    "browserify"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jameskyburz/jof.git"
+  },
+  "author": {
+    "name": "James Kyburz",
+    "email": "james.kyburz@gmail.com"
+  },
+  "main": "index.js",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "",
+    "prepublish": "standard"
+  },
+  "dependencies": {
+    "browserify": "13.0.0",
+    "concat-stream": "1.5.1",
+    "cross-spawn": "2.2.3"
+  },
+  "license": "MIT"
+}
