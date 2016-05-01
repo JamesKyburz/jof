@@ -7,6 +7,7 @@ var port = process.env.PORT || 1234
 module.exports = jof
 
 function jof (opt) {
+  opt.server = server
   server.on('request', (q, r) => {
     var pending = Object.keys(opt.client).length
     Object.keys(opt.client).forEach((url) => {
