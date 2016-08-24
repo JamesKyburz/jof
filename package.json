@@ -17,7 +17,8 @@
   "version": "1.0.5",
   "scripts": {
     "start": "",
-    "prepublish": "standard"
+    "prepublish": "standard",
+    "preversion": "standard"
   },
   "dependencies": {
     "browserify": "13.0.0",
