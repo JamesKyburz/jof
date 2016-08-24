@@ -1,14 +1,63 @@
-var http = require('http')
+var fs = require('fs')
+var parentFile = module.parent.filename
 var spawn = require('cross-spawn')
+var check = require('syntax-error')
+var path = require('path')
+var http = require('http')
 var concat = require('concat-stream')
 var hash = require('http-hash')
-var routes = hash()
-var server = http.createServer()
 var port = process.env.PORT || 1234
+var server = http.createServer()
 
-module.exports = jof
+fs.watchFile(parentFile, rerun)
+setupOnCrash()
+
+function rerun () {
+  console.log('changed detected, running again')
+  Object.keys(require.cache).forEach((key) => {
+    if (key !== __filename) {
+      delete require.cache[key]
+    }
+  })
+  server.removeAllListeners('request')
+  fs.readFile(parentFile, 'utf-8', (_, data) => {
+    console.log('checking syntax %s', parentFile)
+    var error = check(data, parentFile)
+    if (error) {
+      console.error(error)
+      server.on('request', (q, r) => r.end(error.toString()))
+    } else {
+      console.log('syntax ok')
+      require(parentFile)
+    }
+  })
+}
+
+function installMissing (cb) {
+  var ps = spawn('install-missing', [path.basename(parentFile)], { stdio: 'inherit', cwd: process.cwd() })
+  ps.on('exit', cb)
+}
+
+function setupOnCrash () {
+  process.removeListener('uncaughtException', uncaughtException)
+  process.on('uncaughtException', uncaughtException)
+}
+
+function uncaughtException (err) {
+  server.removeAllListeners('request')
+  console.error(err)
+  server.on('request', (q, r) => r.end(err.toString()))
+  setTimeout(rerun, 2000)
+}
+
+module.exports = (opt) => {
+  installMissing(jof.bind(null, opt))
+}
+
+module.exports.html = html
 
 function jof (opt) {
+  var routes = hash()
   if (typeof opt.initialize === 'function') opt.initialize(server)
   server.on('request', onRequest)
   var queue = []
@@ -50,8 +99,6 @@ function jof (opt) {
     }
   }
 }
-
-jof.html = html
 
 function html (js) {
   return `

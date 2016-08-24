@@ -23,7 +23,11 @@
     "browserify": "13.0.0",
     "concat-stream": "1.5.1",
     "cross-spawn": "2.2.3",
-    "http-hash": "2.0.0"
+    "http-hash": "2.0.0",
+    "syntax-error": "1.1.6"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "install-missing": "1.1.30"
+  }
 }
