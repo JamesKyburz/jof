@@ -51,7 +51,12 @@ function uncaughtException (err) {
 }
 
 module.exports = (opt) => {
-  installMissing(jof.bind(null, opt))
+  server.removeAllListeners('request')
+  server.on('request', (q, r) => r.end('checking dependencies'))
+  installMissing(() => {
+    server.removeAllListeners('request')
+    jof(opt)
+  })
 }
 
 module.exports.html = html
