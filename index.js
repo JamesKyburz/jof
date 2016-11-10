@@ -7,6 +7,7 @@ var http = require('http')
 var concat = require('concat-stream')
 var hash = require('http-hash')
 var port = process.env.PORT || 1234
+var browserify = require('bin-path')(require)('browserify').browserify
 var server = http.createServer()
 
 fs.watchFile(parentFile, rerun)
@@ -34,7 +35,7 @@ function rerun () {
 }
 
 function installMissing (cb) {
-  var ps = spawn('install-missing', [path.basename(parentFile)], { stdio: 'inherit', cwd: process.cwd() })
+  var ps = spawn('dependency-sync', [path.basename(parentFile), '--once', '--debug'], { stdio: 'inherit', cwd: process.cwd() })
   ps.on('exit', cb)
 }
 
@@ -75,7 +76,7 @@ function jof (opt) {
     done()
   } else {
     Object.keys(opt.client).forEach((url) => {
-      var ps = spawn('browserify', ['-'].concat(opt.browserify || []))
+      var ps = spawn(browserify, ['-'].concat(opt.browserify || []))
       var js = opt.client[url].toString().split('\n').slice(1, -1).join('\n')
       ps.stdin.write(js)
       ps.stdin.end()
