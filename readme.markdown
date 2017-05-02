@@ -1,5 +1,7 @@
 # jof
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/JamesKyburz/jof.svg)](https://greenkeeper.io/)
+
 :zap: Just one file :zap:
 
 For quick prototyping write server and client code in a single file
